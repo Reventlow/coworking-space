@@ -499,5 +499,19 @@
 </section>
 
 </deck-stage>
+<script>
+// Press F to toggle fullscreen for distraction-free presenting.
+// deck-stage.js already owns the arrow/space/R/number keys; F is free.
+document.addEventListener('keydown', function (e) {
+  if ((e.key === 'f' || e.key === 'F') && !e.ctrlKey && !e.metaKey && !e.altKey && !e.shiftKey) {
+    e.preventDefault();
+    if (document.fullscreenElement) {
+      document.exitFullscreen();
+    } else if (document.documentElement.requestFullscreen) {
+      document.documentElement.requestFullscreen();
+    }
+  }
+});
+</script>
 </body>
 </html>

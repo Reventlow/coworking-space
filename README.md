@@ -30,6 +30,7 @@ docker build -t coworking-space . && docker run -p 8080:80 coworking-space
 ## Usage
 
 - Navigate: ←/→, Space, PgUp/PgDn, Home/End, or tap left/right half
+- `F` toggles fullscreen
 - `R` resets to slide 1
 - Speaker notes live in each slide's `data-speaker-notes` attribute
 - Print → Save as PDF gives one page per slide at 1920×1080
