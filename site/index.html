@@ -499,19 +499,69 @@
 </section>
 
 </deck-stage>
+<!-- Presenter controls: fullscreen (F), slide list / rail (S), speaker notes (N) -->
+<div id="presenter-bar" style="position:fixed;left:16px;bottom:14px;z-index:50;display:flex;gap:8px;font-family:'Work Sans',sans-serif">
+  <button data-toggle="rail"  style="cursor:pointer;font:600 15px 'Work Sans',sans-serif;color:#F6F1E7;background:rgba(47,62,51,0.82);border:1px solid rgba(246,241,231,0.28);border-radius:999px;padding:8px 16px">Slides <span style="opacity:.6">S</span></button>
+  <button data-toggle="notes" style="cursor:pointer;font:600 15px 'Work Sans',sans-serif;color:#F6F1E7;background:rgba(47,62,51,0.82);border:1px solid rgba(246,241,231,0.28);border-radius:999px;padding:8px 16px">Noter <span style="opacity:.6">N</span></button>
+  <button data-toggle="full"  style="cursor:pointer;font:600 15px 'Work Sans',sans-serif;color:#F6F1E7;background:rgba(47,62,51,0.82);border:1px solid rgba(246,241,231,0.28);border-radius:999px;padding:8px 16px">Fuldskærm <span style="opacity:.6">F</span></button>
+</div>
+
+<!-- Speaker-notes panel (hidden until toggled) -->
+<aside id="notes-panel" hidden style="position:fixed;left:0;right:0;bottom:0;z-index:40;max-height:32vh;overflow:auto;box-sizing:border-box;padding:26px 34px 78px;background:rgba(38,43,34,0.94);border-top:3px solid #C05F33;color:#F6F1E7;font-family:'Work Sans',sans-serif">
+  <p id="notes-head" style="margin:0 0 10px;font-size:14px;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;color:#D9895C">Talernoter</p>
+  <p id="notes-body" style="margin:0;font-size:20px;line-height:1.55;color:rgba(246,241,231,0.9);max-width:1100px">—</p>
+</aside>
+
 <script>
-// Press F to toggle fullscreen for distraction-free presenting.
-// deck-stage.js already owns the arrow/space/R/number keys; F is free.
-document.addEventListener('keydown', function (e) {
-  if ((e.key === 'f' || e.key === 'F') && !e.ctrlKey && !e.metaKey && !e.altKey && !e.shiftKey) {
-    e.preventDefault();
-    if (document.fullscreenElement) {
-      document.exitFullscreen();
-    } else if (document.documentElement.requestFullscreen) {
-      document.documentElement.requestFullscreen();
-    }
+(function () {
+  var stage  = document.querySelector('deck-stage');
+  var slides = Array.prototype.slice.call(document.querySelectorAll('deck-stage > section'));
+  var panel  = document.getElementById('notes-panel');
+  var head   = document.getElementById('notes-head');
+  var body   = document.getElementById('notes-body');
+  var current = 0;
+
+  function renderNotes() {
+    var s = slides[current];
+    var note = s ? (s.getAttribute('data-speaker-notes') || '') : '';
+    var label = s ? (s.getAttribute('data-label') || '') : '';
+    head.textContent = 'Talernoter · ' + (current + 1) + ' / ' + slides.length +
+                       (label ? ' · ' + label : '');
+    body.textContent = note.trim() || 'Ingen noter til dette slide.';
   }
-});
+
+  // deck-stage posts {slideIndexChanged:N} to this same window on every nav.
+  window.addEventListener('message', function (e) {
+    var d = e.data;
+    if (d && typeof d.slideIndexChanged === 'number') {
+      current = d.slideIndexChanged;
+      if (!panel.hidden) renderNotes();
+    }
+  });
+
+  function toggleFull() {
+    if (document.fullscreenElement) document.exitFullscreen();
+    else if (document.documentElement.requestFullscreen) document.documentElement.requestFullscreen();
+  }
+  function toggleRail()  { stage.toggleAttribute('no-rail'); }
+  function toggleNotes() { panel.hidden = !panel.hidden; if (!panel.hidden) renderNotes(); }
+
+  document.addEventListener('keydown', function (e) {
+    if (e.ctrlKey || e.metaKey || e.altKey) return;
+    var k = e.key.toLowerCase();
+    if (k === 'f') { e.preventDefault(); toggleFull(); }
+    else if (k === 's') { e.preventDefault(); toggleRail(); }
+    else if (k === 'n') { e.preventDefault(); toggleNotes(); }
+  });
+
+  document.getElementById('presenter-bar').addEventListener('click', function (e) {
+    var btn = e.target.closest('button'); if (!btn) return;
+    var t = btn.getAttribute('data-toggle');
+    if (t === 'full') toggleFull();
+    else if (t === 'rail') toggleRail();
+    else if (t === 'notes') toggleNotes();
+  });
+})();
 </script>
 </body>
 </html>
