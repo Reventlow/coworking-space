@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32">
+  <!-- Deck palette: spruce bg, terracotta shield, cream keyhole -->
+  <rect width="32" height="32" rx="7" fill="#2F3E33"/>
+  <path d="M16 5.5 L24 8.6 V16 C24 21 20.2 24.3 16 26.5 C11.8 24.3 8 21 8 16 V8.6 Z"
+        fill="#D9895C"/>
+  <circle cx="16" cy="14.6" r="2.1" fill="#2F3E33"/>
+  <path d="M14.8 15 h2.4 l-0.7 4.2 h-1 Z" fill="#2F3E33"/>
+</svg>
