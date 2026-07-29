@@ -1,8 +1,12 @@
 # IT-sikkerhed i kontorfællesskaber
 
-A 27-slide presentation deck (Danish) about IT security in shared office
-spaces, presented by Gorm Reventlow. Warm Scandinavian nature aesthetic,
-1920×1080, built as a static HTML deck with two small web components.
+A Danish presentation deck about IT security in shared office spaces,
+presented by Gorm Reventlow. Warm Scandinavian nature aesthetic, 1920×1080,
+built as a static HTML deck with two small web components.
+
+Footer slide numbers are computed by `deck-stage.js` from each slide's
+position (skip-aware), so they never drift when slides are added or removed —
+`site/index.html` holds no hardcoded `NN / NN` strings.
 
 Live at: <https://kontor.blacklog.net>
 

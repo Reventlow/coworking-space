@@ -814,6 +814,7 @@
             this._markLastVisible();
             this._renumberRail();
             this._syncCount();
+            this._syncFolios();
             try { window.postMessage({ slideIndexChanged: this._index, deckTotal: this._slides.length, deckSkipped: this._skippedIndices() }, '*'); } catch (e) {}
           }
         }
@@ -1451,6 +1452,7 @@
       if (this._index >= this._slides.length) this._index = Math.max(0, this._slides.length - 1);
       this._markLastVisible();
       this._syncCount();
+      this._syncFolios();
       this._renderRail();
     }
 
@@ -2931,6 +2933,29 @@
       const curSkipped = !cur || cur.hasAttribute('data-deck-skip');
       this._countEl.textContent = curSkipped ? '–' : String(pos);
       this._totalEl.textContent = String(total);
+    }
+
+    /** Per-slide footer folios, skip-aware. Fills every slide's
+     *  [data-deck-folio] element with its zero-padded position over the
+     *  non-skipped total (e.g. "05 / 30"), reusing the same numbering
+     *  _syncCount paints so the footer pills, the rail and the overlay
+     *  always agree. Skipped slides and the folio-less title slide get
+     *  nothing. Text writes are diffed. Called from _collectSlides (init +
+     *  structural change) and on skip toggles — never per-navigation, since
+     *  folios don't change when the current index moves. */
+    _syncFolios() {
+      if (!this._slides || !this._slides.length) return;
+      let total = 0;
+      this._slides.forEach((s) => { if (!s.hasAttribute('data-deck-skip')) total++; });
+      let v = 0;
+      this._slides.forEach((s) => {
+        const skip = s.hasAttribute('data-deck-skip');
+        if (!skip) v++;
+        const el = s.querySelector('[data-deck-folio]');
+        if (!el) return;
+        const txt = skip ? '' : (pad2(v) + ' / ' + total);
+        if (el.textContent !== txt) el.textContent = txt;
+      });
     }
 
     _moveSlide(i, j) {
