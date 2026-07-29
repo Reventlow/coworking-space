@@ -1,0 +1,3 @@
+# Original handoff bundle (extracted copies live in docs/ and site/)
+handoff_extract/
+*.zip

@@ -1,0 +1,6 @@
+.git
+.github
+handoff_extract
+docs
+*.zip
+*.md
