@@ -1,3 +1,6 @@
 # Original handoff bundle (extracted copies live in docs/ and site/)
 handoff_extract/
 *.zip
+
+# Original full-res portrait (optimised copy lives in site/assets/portraet.jpg)
+/gorm.jpg
